@@ -1,0 +1,137 @@
+#:import utils kivy.utils
+
+<Login>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        GridLayout:
+            pos_hint: {"top": 1, "center_x": 0.5}
+            size_hint: 1, 0.5
+            canvas:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "Image/First Background.png"
+        GridLayout:
+            pos_hint: {"top": 0.98, "center_x": 0.5}
+            size_hint: 150/root.width, 150/root.height
+            canvas:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "Image/Logov3.png"
+        GridLayout:
+            pos_hint: {"top": 0.75, "center_x": 0.5}
+            size_hint: 280/root.width, 328/root.height
+            canvas:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "Image/Second BackgroundV2.png"
+
+        Label:
+            pos_hint: {"top": 0.7, "center_x": 0.5}
+            size_hint: 1, 0.03
+            halign: "center"
+            valign: "center"
+            text: "Chem Hero"
+            font_size: "40dp"
+            color: 0, 0, 0, 1
+            font_name: "Cabin Sketch"
+        Label:
+            id: error_text
+            pos_hint: {"top": 0.35, "center_x": 0.5}
+            size_hint: 1, 0.03
+            text: ""
+            valign: "center"
+            halign: "center"
+            color: 1, 0, 0, 1
+            font_name: "Open Sans Light"
+            font_size: "12dp"
+        Label:
+            pos_hint: {"top": 0.12, "center_x": 0.3}
+            size_hint: 0.3, 0.03
+            text: "Don't Have an Account?"
+            font_size: "16dp"
+            color: 0, 0, 0, 1
+        Label:
+            pos_hint: {"top": 0.12, "center_x": 0.75}
+            size_hint: 0.3, 0.03
+            text: "[ref=Signup]Sign Up Here[/ref]"
+            font_size: "16dp"
+            color: 0, 0, 0.8, 1
+            markup: True
+            on_ref_press: app.change_screen("signup_student_or_teacher_screen")
+        Label:
+            pos_hint: {"top": 0.1, "center_x": 0.5}
+            size_hint: 0.7, 0.1
+            color: 0, 0, 0, 1
+            font_size: "12dp"
+            font_name: "Open Sans Light"
+            text: "By signing up, you agree to"
+        Label:
+            pos_hint: {"top": 0.07, "center_x": 0.5}
+            size_hint: 0.7, 0.1
+            color: 0, 0, 0, 1
+            font_size: "12dp"
+            font_name: "Open Sans Light"
+            text: "our Terms and Services"
+
+    # Email Input Box
+    GridLayout:
+        rows: 1
+        cols: 1
+        pos_hint: {"top": 0.55, "center_x": 0.5}
+        size_hint: 0.8, 0.06
+        TextInput:
+            id: email_text
+            hint_text: "Email Address"
+            font_name: "Open Sans Light"
+            multiline: False
+            # change the background color to whatever I want later.
+
+    # Password Input Box
+    GridLayout:
+        rows: 1
+        cols: 1
+        pos_hint: {"top": 0.45, "center_x": 0.5}
+        size_hint: 0.8, 0.06
+        TextInput:
+            id: password_text
+            font_name: "Open Sans Light"
+            hint_text: "Password"
+            multiline: False
+            password: True
+
+    # Forgot Password Text
+    GridLayout:
+        rows: 1
+        cols: 1
+        pos_hint: {"top": 0.4, "center_x": 0.5}
+        size_hint: 0.6, 0.04
+        Label:
+            color: 0, 0, 0, 1
+            id: forgot_password_label
+            text: "[ref=Password]FORGOT PASSWORD?[/ref]"
+            markup: True
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            on_ref_press: app.show_popup()
+
+    # the Sign in Button
+    GridLayout:
+        rows: 1
+        cols: 1
+        pos_hint: {"top": 0.3, "center_x": 0.5}
+        size_hint: 0.7, 0.05
+        Button:
+            id: sign_in_button
+            text: "Sign In"
+            on_release: app.sign_in(); error_text.text: ""

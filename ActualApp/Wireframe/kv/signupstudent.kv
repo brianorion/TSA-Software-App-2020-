@@ -1,0 +1,61 @@
+<SignupStudent>:
+    canvas:
+        # to put a background image on the login screen
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "Image/Login Background.png"
+    FloatLayout:
+        Label:
+            pos_hint: {"top": 0.9, "center_x": 0.5}
+            size_hint: 1, 0.1
+            text: "Student Signup"
+            font_size: "24dp"
+        TextInput:
+            multiline: False
+            id: student_email_signup
+            pos_hint: {"top": 0.8, "center_x": 0.5}
+            size_hint: 0.8, 0.05
+            hint_text: "Email"
+        TextInput:
+            multiline: False
+            id: student_password_signup
+            pos_hint: {"top": 0.7, "center_x": 0.5}
+            size_hint: 0.8, 0.05
+            password: True
+            hint_text: "Password"
+        TextInput:
+            multiline: False
+            id: name
+            pos_hint: {"top": 0.6, "center_x": 0.5}
+            size_hint: 0.8, 0.05
+            hint_text: "Name"
+        TextInput:
+            multiline: False
+            id: DOB
+            pos_hint: {"top": 0.5, "center_x": 0.5}
+            size_hint: 0.8, 0.05
+            hint_text: "DOB: MM/DD/YYYY"
+        TextInput:
+            multiline: False
+            id: username
+            pos_hint: {"top": 0.4, "center_x": 0.5}
+            size_hint: 0.8, 0.05
+            hint_text: "Username"
+        Label:
+            id: error_text
+            pos_hint: {"top": 0.35, "center_x": 0.5}
+            size_hint: 0.5, 0.05
+            text: ""
+            color: 1, 0, 0, 1
+        Button:
+            pos_hint: {"top": 0.3, "center_x": 0.5}
+            size_hint: 0.25, 0.1
+            text: "Signup!"
+            on_release: app.change_screen("login_screen")
+        Button:
+            pos_hint: {"top": 0.1, "left": 1}
+            size_hint: 0.3, 0.05
+            text: "Back"
+
+

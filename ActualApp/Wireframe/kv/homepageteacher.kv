@@ -1,0 +1,28 @@
+<HomePageTeacher>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        # to put a background image on the login screen
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    GridLayout:
+        size_hint: 1, 0.1
+        pos_hint: {"top": 1, "center_x": 0.5}
+        rows: 1
+        cols: 1
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "Image/HomePageTop.png"
+        Label:
+            text: "Teacher Corner"
+            font_size: 40
+            color: 0, 0, 0, 1
+            font_name: "Cabin Sketch"
+    TabbedPanel:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, "top": 0.9}
+        do_default_tab: False
+

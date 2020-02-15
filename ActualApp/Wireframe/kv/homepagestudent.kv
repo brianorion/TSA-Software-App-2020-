@@ -1,0 +1,335 @@
+<HomePageStudent>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        # to put a background image on the login screen
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    GridLayout:
+        size_hint: 1, 0.1
+        pos_hint: {"top": 1, "center_x": 0.5}
+        rows: 1
+        cols: 1
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "Image/HomePageTop.png"
+        Label:
+            text: "Chem Help Corner"
+            font_size: 40
+            color: 0, 0, 0, 1
+            font_name: "Cabin Sketch"
+    TabbedPanel:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, "top": 0.9}
+        do_default_tab: False
+        TabbedPanelItem:
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            text: "Assignments"
+        # TODO Do some assignment things.
+        TabbedPanelItem:
+            text: 'Search\n Element'
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                GridLayout:
+                    size_hint: 1, 0.1
+                    rows: 1
+                    cols: 1
+                    pos_hint: {"top": 1, "center_x": 0.5}
+                    canvas:
+                        Color:
+                            rgba: 0, 1, 0, 0.7
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Button:
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.985, "right": 1}
+                    text: "Search"
+                    font_name: "Open Sans Light"
+                    on_release: app.show_element_property()
+                TextInput:
+                    id: search_text
+                    size_hint: 0.7, 0.07
+                    pos_hint: {"top": 0.985, "left": 1}
+                    multiline: False
+                    hint_text: "Hydrogen"
+                    on_text_validate: app.show_element_property()
+                    font_name: "Open Sans"
+                ScrollView:
+                    pos_hint: {"top": 0.9, "center_x": 0.5}
+                    size_hint: 1, 0.96
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    GridLayout:
+                        id: searching_table
+                        row_default_height: 30
+                        row_force_default: True
+                        cols: 2
+                        padding: 0, 0
+                        spacing: 0, 0
+                        size_hint_y: None
+                        height: self.minimum_height * 1.18
+        TabbedPanelItem:
+            text: "Molar\nCalculator"
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                GridLayout:
+                    size_hint: 1, 0.1
+                    rows: 1
+                    cols: 1
+                    pos_hint: {"top": 1, "center_x": 0.5}
+                    canvas:
+                        Color:
+                            rgba: 0, 1, 0, 0.7
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Button:
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.985, "right": 1}
+                    text: "Calculate"
+                    font_name: "Open Sans Light"
+                    on_release: app.calculate_molar_mass()
+                TextInput:
+                    id: chemical_formula_text
+                    size_hint: 0.7, 0.07
+                    pos_hint: {"top": 0.985, "left": 1}
+                    multiline: False
+                    hint_text: "H2O"
+                    on_text_validate: app.calculate_molar_mass()
+                    font_name: "Open Sans"
+                ScrollView:
+                    pos_hint: {"top": 0.90, "center_x": 0.5}
+                    size_hint: 1, 0.90
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    scroll_y: 0
+                    Label:
+                        markup: True
+                        size_hint_y: None
+                        id: calculation_text
+                        font_size: 14
+                        height: self.texture_size[1] * 1.15
+                        text_size: root.width, None
+                        color: 0, 0, 0, 1
+                        font_name: "Open Sans"
+                        text: ""
+        TabbedPanelItem:
+            text: "Calculate\nFormula"
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                GridLayout:
+                    size_hint: 1, 0.25
+                    rows: 1
+                    cols: 1
+                    pos_hint: {"top": 1, "center_x": 0.5}
+                    canvas:
+                        Color:
+                            rgba: 0, 1, 0, 0.7
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Button:
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.83, "center_x": 0.5}
+                    text: "Calculate"
+                    font_name: "Open Sans Light"
+                    on_release: app.calculate_formula()
+                TextInput:
+                    id: element_list_text
+                    size_hint: 1, 0.07
+                    pos_hint: {"top": 0.985, "left": 1}
+                    multiline: False
+                    hint_text: "C, H, O"
+                    on_text_validate: app.calculate_formula()
+                    font_name: "Open Sans"
+                TextInput:
+                    id: percent_list_text
+                    size_hint: 1, 0.07
+                    pos_hint: {"top": 0.91, "left": 1}
+                    multiline: False
+                    hint_text: "0.4, 0.25, 0.35 or 40%, 25%, 35%"
+                    font_name: "Open Sans"
+                    on_text_validate: app.calculate_formula()
+                ScrollView:
+                    pos_hint: {"top": 0.75, "center_x": 0.5}
+                    size_hint: 1, 0.96
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    scroll_y: 0
+                    Label:
+                        size_hint_y: None
+                        id: calculate_formula_scroll_view
+                        font_size: 14
+                        height: self.texture_size[1]
+                        text_size: root.width, None
+                        color: 0, 0, 0, 1
+                        font_name: "Open Sans"
+                        text: ""
+        TabbedPanelItem:
+            text: "Balance\nEquation"
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                GridLayout:
+                    size_hint: 1, 0.25
+                    rows: 1
+                    cols: 1
+                    pos_hint: {"top": 1, "center_x": 0.5}
+                    canvas:
+                        Color:
+                            rgba: 0, 1, 0, 0.7
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Button:
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.83, "center_x": 0.5}
+                    text: "Balance"
+                    font_name: "Open Sans Light"
+                    on_release: app.balance_equation()
+                Label:
+                    text: "Reactants"
+                    color: 0, 0, 0, 0.9
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.99, "left": 0.3}
+                    font_name: "Open Sans"
+                    bold: True
+                TextInput:
+                    id: reactant_list
+                    size_hint: 0.7, 0.07
+                    pos_hint: {"top": 0.985, "right": 1}
+                    multiline: False
+                    hint_text: "C6H12O6, O2"
+                    font_name: "Open Sans"
+                Label:
+                    text: "Products"
+                    color: 0, 0, 0, 0.9
+                    size_hint: 0.3, 0.07
+                    pos_hint: {"top": 0.915, "left": 0.3}
+                    font_name: "Open Sans"
+                    bold: True
+                TextInput:
+                    id: product_list
+                    size_hint: 0.7, 0.07
+                    pos_hint: {"top": 0.91, "right": 1}
+                    multiline: False
+                    hint_text: "CO2, H2O"
+                    font_name: "Open Sans"
+                ScrollView:
+                    pos_hint: {"top": 0.75, "center_x": 0.5}
+                    size_hint: 1, 0.96
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    scroll_y: 0
+                    Label:
+                        size_hint_y: None
+                        id: balance_equation_scroll_view
+                        markup: True
+                        font_size: 14
+                        height: self.texture_size[1]
+                        text_size: root.width, None
+                        color: 0, 0, 0, 1
+                        font_name: "Open Sans Light"
+                        text: ""
+        TabbedPanelItem:
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            text: "Classroom"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+        TabbedPanelItem:
+            font_size: "14dp"
+            font_name: "Open Sans Light"
+            text: "Settings"
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    pos_hint: {"top": 1, "center_x": 0.5}
+                    size_hint: 1, 0.1
+                    text: "Settings"
+                    font_name: "Cabin Sketch"
+                    font_size: 40
+                    color: 0, 0, 0, 1
+                GridLayout:
+                    cols: 2
+                    pos_hint: {"top": 0.9, "center_x": 0.5}
+                    size_hint: 0.9, 1
+                    row_default_height: 20
+                    row_force_default: True
+                    Label:
+                        text: "Name:"
+                        color: 0, 0, 0, 1
+                    Label:
+                        id: name
+                        text: ""
+                        color: 0, 0, 0, 1
+                    Label:
+                        text: "Email:"
+                        color: 0, 0, 0, 1
+                    Label:
+                        id: email
+                        text: ""
+                        color: 0, 0, 0, 1
+                    Label:
+                        text: "Date of Birth:"
+                        color: 0, 0, 0, 1
+                    Label:
+                        id: DOB
+                        text: ""
+                        color: 0, 0, 0, 1
+                    Label:
+                        text: "Username:"
+                        color: 0, 0, 0, 1
+                    Label:
+                        id: username
+                        text: ""
+                        color: 0, 0, 0, 1
+                    Label:
+                        text: "Status:"
+                        color: 0, 0, 0, 1
+                    Label:
+                        id: status
+                        text: ""
+                        color: 0, 0, 0, 1

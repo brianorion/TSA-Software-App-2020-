@@ -1,0 +1,10 @@
+https://github.com/Bowserinator/Periodic-Table-JSON
+Label:
+                        size_hint_y: None
+                        id: scroll_view_text
+                        font_size: 20
+                        height: self.texture_size[1]
+                        text_size: root.width, None
+                        color: 0, 0, 0, 1
+                        font_name: "Open Sans"
+                        text: ""

@@ -1,0 +1,33 @@
+#:include kv/forgotpassword.kv
+#:include kv/login.kv
+#:include kv/signupstudentorteacher.kv
+#:include kv/homepagestudent.kv
+#:include kv/homepageteacher.kv
+#:include kv/signupstudent.kv
+#:include kv/signupteacher.kv
+
+GridLayout:
+    cols: 1
+    ScreenManager:
+        id: screen_manager
+        Login:
+            name: "login_screen"
+            id: login_screen
+        SignupStudentOrTeacher:
+            name: "signup_student_or_teacher_screen"
+            id: signup_student_or_teacher_screen
+        HomePageStudent:
+            name: "home_page_student"
+            id: home_page_student
+        HomePageTeacher:
+            name: "home_page_teacher"
+            id: home_page_teacher
+        SignupStudent:
+            name: "signup_student"
+            id: signup_student
+        SignupTeacher:
+            name: "signup_teacher"
+            id: signup_teacher
+        ForgotPassword:
+            name: "forgot_password"
+            id: forgot_password
