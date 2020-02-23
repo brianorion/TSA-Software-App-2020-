@@ -78,7 +78,7 @@ class MainApp(App):
         self.SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
     def build(self):
-        Window.size = (1080, 2050)  # 1080, 2050
+        Window.size = (1080 / 3, 2050 / 3)  # 1080, 2050
         return kv
 
     # changes the current screen to another screen if a button was pressed.
