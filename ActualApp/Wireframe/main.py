@@ -237,7 +237,7 @@ class MainApp(App):
 
     # show the properties of the elements
     def show_element_property(self):
-        homepage_student = self.root.ids["home_page_student"]
+        homepage_student = self.root.ids["search_element"]
         scroll_view_gridlayout = homepage_student.ids["searching_table"]
         search_text = homepage_student.ids["search_text"]
         dictionary_of_elements = elements.get_elements()
