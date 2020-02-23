@@ -51,5 +51,51 @@
             color: 0, 0, 0, 1
             pos_hint: {"top": 0.93, "center_x": 0.5}
             size_hint: 1, 0.1
-        # Buttons for navigation
+        GridLayout:
+            col: 1
+            row: 1
+            pos_hint: {"top": 0.8, "center_x": 0.5}
+            size_hint: 0.8, 0.01
+            canvas:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "Image/1-1 Login/Content #20/Divider #79.png"
 
+        # Buttons for navigation
+        Button:
+            pos_hint: {"top": 0.7, "center_x": 0.3}
+            size_hint: 0.35, 0.07
+            text: "Search\nElement"
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            on_release: app.change_screen("search_element")
+        Button:
+            pos_hint: {"top": 0.5, "center_x": 0.3}
+            text: "Molar\nCalculator"
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            size_hint: 0.35, 0.07
+            on_release: app.change_screen("molar_calculator")
+        Button:
+            pos_hint: {"top": 0.3, "center_x": 0.3}
+            text: "Calculate\nFormula"
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            size_hint: 0.35, 0.07
+            on_release: app.change_screen("calculate_formula")
+        Button:
+            pos_hint: {"top": 0.7, "center_x": 0.7}
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            text: "Balancing\nEquation"
+            size_hint: 0.35, 0.07
+            on_release: app.change_screen("balancing_equations")
+        Button:
+            pos_hint: {"top": 0.5, "center_x": 0.70}
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            text: "Acid/Base"
+            size_hint: 0.35, 0.07
+            on_release: app.change_screen("acid_base")
+        Button:
+            pos_hint: {"top": 0.3, "center_x": 0.70}
+            background_normal: "Image/Homepage/Ellipse 1.png"
+            text: "Best Lewis\nStructures"
+            size_hint: 0.35, 0.07
+            on_release: app.change_screen("lewis_structure")

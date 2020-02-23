@@ -18,7 +18,6 @@ class Authentication:
         # we first throw a signup request and the data
         signup_request = self.auth.create_user_with_email_and_password(email=email, password=password)
         data = json.loads(signup_request.content.decode())
-
         # if the response was not good, load the error
         if not signup_request.ok:
             error_message = data["error"]["message"]

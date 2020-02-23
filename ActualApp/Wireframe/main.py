@@ -43,6 +43,30 @@ class HomePageTeacher(Screen):
     pass
 
 
+class SearchElement(Screen):
+    pass
+
+
+class BalancingEquations(Screen):
+    pass
+
+
+class MolarCalculator(Screen):
+    pass
+
+
+class AcidBase(Screen):
+    pass
+
+
+class CalculateFormula(Screen):
+    pass
+
+
+class LewisStructure(Screen):
+    pass
+
+
 # Some Helpful Methods
 def process_error_message(error_message):
     error_message = error_message.split("_")
@@ -92,8 +116,7 @@ class MainApp(App):
             print("No text available")
         if screen_manager.current == "signup_student":
             self.sign_up_for_students()
-        elif screen_manager.current == "signup_teacher":
-            self.sign_up_for_teachers()
+
         if self.can_change_screen:
             screen_manager.current = screen_name
             print(screen_manager.current)
@@ -244,6 +267,7 @@ class MainApp(App):
             scroll_view_gridlayout.add_widget(Label(text="Invalid Search",
                                                     font_name="Open Sans",
                                                     font_size=26))
+
     # calculate the molar mass
     def calculate_molar_mass(self):
         home_page_student = self.root.ids["home_page_student"]
@@ -325,12 +349,8 @@ class MainApp(App):
     def home_page_classroom(self):
         pass
 
-    def image_ratio(self, source_img: str, height=False, width=False):
-        image_size = self.image_dict[source_img]
-        if height:
-            return image_size[0] / 2050
-        elif width:
-            return image_size[1] / 1080
+    def sign_out(self):
+        self.change_screen("login_screen")
 
 if __name__ == "__main__":
     MainApp().run()
