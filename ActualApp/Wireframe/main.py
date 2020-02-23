@@ -78,7 +78,7 @@ class MainApp(App):
         self.SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
     def build(self):
-        Window.size = (1080, 2050) ###@!#@!#!@#!#@
+        Window.size = (1080, 2050)  # 1080, 2050
         return kv
 
     # changes the current screen to another screen if a button was pressed.
@@ -98,11 +98,19 @@ class MainApp(App):
             screen_manager.current = screen_name
             print(screen_manager.current)
 
+    def back_button(self, screen_name, change_screen: bool):
+        screen_manager = self.root.ids["screen_manager"]
+        screen_manager.transition = NoTransition()
+        if change_screen:
+            screen_manager.current = screen_name
+            self.can_change_screen = True
+            print(screen_manager.current)
+
     # Popup window method
     def show_popup(self):
         self.forgot_password_popup = ForgotPassword()
         popup_window = Popup(title="Chem Hero", content=self.forgot_password_popup,
-                             size_hint=(300 / self.root.width, 300 / self.root.height))
+                             size_hint=(0.8333333333333334, 0.43902439024390244))
         popup_window.open()
 
     # student sign up
@@ -123,42 +131,13 @@ class MainApp(App):
             error_text.text = "Missing Inputs"
             self.can_change_screen = False
         elif local_id in self.error_messages:
-            error_text.text = local_id
+            error_text.text = process_error_message(local_id)
             self.can_change_screen = False
         else:
             # the data
             data = {"Occupation": "Student", "name": name.text,
                     "Date of Birth": dob.text, "Username": username.text,
                     "Email": email.text}
-
-            # the database storing process
-            database = Database.db
-            database.child("Users").child(local_id).set(data)
-
-            email.text = ""
-            password.text = ""
-            self.can_change_screen = True
-
-    # teacher sign up
-    def sign_up_for_teachers(self):
-        # for the code detail view the previous method
-        sign_up_teacher_screen = self.root.ids["signup_teacher"]
-        email = sign_up_teacher_screen.ids["teacher_email_signup"]
-        password = sign_up_teacher_screen.ids["teacher_password_signup"]
-        error_text = sign_up_teacher_screen.ids["error_text"]
-
-        auth = Authentication()
-        local_id = auth.signup(email.text, password.text)
-
-        if email.text == "" or password.text == "":
-            error_text.text = "Missing Inputs"
-            self.can_change_screen = False
-        elif local_id in self.error_messages:
-            error_text.text = local_id
-            self.can_change_screen = False
-        else:
-            # the data
-            data = {"Occupation": "Teacher", "age": 21}
 
             # the database storing process
             database = Database.db
@@ -206,10 +185,10 @@ class MainApp(App):
                 occupation = Database.get_occupation(database, self.local_id, "Occupation", "Users")
                 if occupation == "Student":
                     home_page = "home_page_student"
-                    self.initial_settings("student")
+                    #self.initial_settings("student")
                 elif occupation == "Teacher":
                     home_page = "home_page_teacher"
-                    self.initial_settings("teacher")
+                    #self.initial_settings("teacher")
                 self.change_screen(home_page)
             else:
                 error_text.text = "Email not Verified"
@@ -346,6 +325,12 @@ class MainApp(App):
     def home_page_classroom(self):
         pass
 
+    def image_ratio(self, source_img: str, height=False, width=False):
+        image_size = self.image_dict[source_img]
+        if height:
+            return image_size[0] / 2050
+        elif width:
+            return image_size[1] / 1080
 
 if __name__ == "__main__":
     MainApp().run()

@@ -12,7 +12,7 @@ def check_folder(directory: str):
         else:  # if it isn't a folder
             if ".png" in filename:
                 img = cv2.imread(directory + "//" + filename)
-                image_dict[directory + f"/{filename}"] = (img.shape[0], img.shape[1])
+                image_dict[filename] = (img.shape[0], img.shape[1])
 
 
 if __name__ == "__main__":
