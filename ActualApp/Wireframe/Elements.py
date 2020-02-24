@@ -48,8 +48,9 @@ class MolarMass:
         self.capital_letters = [chr(x) for x in range(65, 91)]
         self.lowercase_letters = [chr(x) for x in range(97, 123)]
         self.molecule = molecule
+        self.symbol_list = self._generate_symbol_list()
         # the frequency of each element
-        self.element_frequencies = self._count_molecule()
+        self.element_frequencies = self._separate_molecule()
         # a whole dictionary of each element mass base off of atomic symbol
         self.dict_of_element_mass = symbol_mass_key_pair()
         # the molar mass of the given element
@@ -57,72 +58,53 @@ class MolarMass:
         # the element composition {element: (total mass, abundance in decimal)}
         self.element_composition = self._element_composition()
 
+
     def __str__(self):
         return self.molecule
 
+    def _generate_symbol_list(self) -> list:
+        symbol_list = [symbol for symbol, name in symbol_element_name_key_pair().items()]
+        symbol_list.sort(key=len)
+        symbol_list.reverse()
+        return symbol_list
+
     def _separate_molecule(self):
-
-        list_of_elements = []
-        list_of_elements_with_count = []
-        instance_of_capital = True
-        element = ""
-        times_to_continue = 0
-        # for each character in the molecule
-        for i, character in enumerate(self.molecule):
-            if character in self.capital_letters and instance_of_capital:
-                element += character
-                instance_of_capital = False
-                if i == len(self.molecule) - 1:
-                    list_of_elements.append(element)
-            elif character in self.lowercase_letters:
-                element += character
-                if i == len(self.molecule) - 1:
-                    list_of_elements.append(element)
-            elif character in self.capital_letters:
-                list_of_elements.append(element)
-                element = ""
-                element += character
-                if i == len(self.molecule) - 1:
-                    list_of_elements.append(element)
-            elif isinstance(eval(character), int):
-                element += character
-                instance_of_capital = True
-                index = i
-                while True:
-                    try:
-                        if isinstance(eval(self.molecule[index + 1]), int):
-                            element += self.molecule[index + 1]
-                            index += 1
+        symbol_dict = {}
+        index_value = 0
+        for symbol in self.symbol_list:
+            len_of_symbol = len(symbol)
+            indexes = [i for i in range(len(self.molecule)) if self.molecule.startswith(symbol, i)]
+            if len(indexes) > 0:
+                for index in indexes:
+                    the_index = index + len_of_symbol
+                    # print(index + len_of_symbol)
+                    if the_index != len(self.molecule):
+                        number = self.molecule[the_index]  # extract a potential number
+                        try:
+                            if isinstance(eval(number), int):
+                                for x in range(1, len(self.molecule)):
+                                    try:
+                                        if isinstance(eval(self.molecule[x + the_index]), int):  # if the next thing is an int
+                                            number += self.molecule[x + the_index]
+                                            print(number)
+                                    except:
+                                        break
+                                if symbol not in symbol_dict:
+                                    symbol_dict[symbol] = eval(number)
+                                else:
+                                    symbol_dict[symbol] += eval(number)
+                        except Exception:
+                            if symbol not in symbol_dict:
+                                symbol_dict[symbol] = 1
+                            else:
+                                symbol_dict[symbol] += 1
+                    else:
+                        if symbol not in symbol_dict:
+                            symbol_dict[symbol] = 1
                         else:
-                            break
-                    except Exception as e:
-                        break
-                list_of_elements.append(element)
-                element = ""
-
-        for entry in list_of_elements:
-            try:
-                if isinstance(eval(entry), int):
-                    continue
-            except Exception as e:
-                list_of_elements_with_count.append(entry)
-
-        return list_of_elements_with_count
-
-    def _count_molecule(self):
-        separated_molecule = self._separate_molecule()
-        dict_of_elements = {}
-        for entry in separated_molecule:
-            key, value = "", ""
-            for character in entry:
-                if character in self.capital_letters or character in self.lowercase_letters:
-                    key += character
-                else:
-                    value += character
-            if value == "":
-                value = 1
-            dict_of_elements[key] = int(value)
-        return dict_of_elements
+                            symbol_dict[symbol] += 1
+            index_value += 1
+        return symbol_dict
 
     def _calculate_molar_mass(self):
         molar_mass = 0
@@ -340,15 +322,25 @@ class EquationBalance:
 if __name__ == "__main__":
     # print(process_element_information(get_elements()["Hydrogen"]))
     # print(element_mass(get_elements()["Hydrogen"]))
-    entry_molar_mass = MolarMass("MgSO4")
-    # print(entry_molar_mass.show_element_composition())
-    # print(entry_molar_mass.molar_mass)
-    percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 290)
-    # # print(percent_comp.elements_percent_pair)
-    # # print(get_elements()["Hydrogen"]["atomic_mass"])
-    print(percent_comp.empirical_formula[1])
+    # entry_molar_mass = MolarMass("MgSO4")
+    # # print(entry_molar_mass.show_element_composition())
+    # # print(entry_molar_mass.molar_mass)
+    # percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 290)
+    # # # print(percent_comp.elements_percent_pair)
+    # # # print(get_elements()["Hydrogen"]["atomic_mass"])
+    # print(percent_comp.empirical_formula[1])
     # print(percent_comp.molecular_formula)
     # print(percent_comp.abundance)
     # temp = EquationBalance("C6H12O6, O2", "CO2, H2O")
     # print(entry_molar_mass.show_calculation())
     # print(symbol_element_name_key_pair())
+
+    x = [symbol for symbol, name in symbol_element_name_key_pair().items()]
+
+    x.sort(key=len)
+    x.reverse()
+
+    molar = MolarMass("C20H12H23")
+    print(molar.element_frequencies)
+    print(molar.molar_mass)
+

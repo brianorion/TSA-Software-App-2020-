@@ -4,6 +4,9 @@ from kivy.lang.builder import Builder
 from kivy.uix.screenmanager import Screen, NoTransition
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.core.text.markup import MarkupLabel
 from kivy.core.window import Window
 from kivy.core.text import LabelBase
 import json
@@ -76,6 +79,25 @@ def process_error_message(error_message):
 
     return return_message
 
+
+def process_message(messages: str, key=True):
+    returned_message = ""
+    if key:
+        messages = messages.split("_")
+        for index, message in enumerate(messages):
+            if len(messages) - 1 != index:
+                returned_message += message.capitalize() + "\n"
+            else:
+                returned_message += message.capitalize()
+    else:
+        for index, message, in enumerate(messages):
+            message = str(message)
+            if index % 2 == 0:
+                returned_message += "\n"
+            returned_message += message + ", "
+            print(message)
+        returned_message = returned_message.rstrip(", ")
+    return returned_message
 
 # All of the fonts
 Cabin_Sketch_Dir = "Fonts/Cabin_Sketch/"
@@ -238,39 +260,51 @@ class MainApp(App):
     # show the properties of the elements
     def show_element_property(self):
         homepage_student = self.root.ids["search_element"]
-        scroll_view_gridlayout = homepage_student.ids["searching_table"]
-        search_text = homepage_student.ids["search_text"]
+        scroll_view_gridlayout = homepage_student.ids["searching_table"]  # the gridlayout
+        search_text = homepage_student.ids["search_text"]  # the input box
         dictionary_of_elements = elements.get_elements()
         dict_of_symbols = elements.symbol_element_name_key_pair()
         scroll_view_gridlayout.clear_widgets()
+
         print(dictionary_of_elements)
         print(dict_of_symbols)
         # TODO make the information more viewable
         if search_text.text.capitalize() in dictionary_of_elements:
             element = dictionary_of_elements[search_text.text.capitalize()]
             for key, value in element.items():
-                if key in ["source", "spectral_img", "xpos", "ypos", "shells", "summary"]:
+                if key in ["source", "spectral_img", "xpos", "ypos", "shells", "summary", "ionization_energies",
+                           "appearance", "electron_configuration"]:
                     continue
-                scroll_view_gridlayout.add_widget(Label(text=str(key), color=(0, 0, 0, 1)))
+                if key == "density":
+                    value = f"{value} g/L"
+                if isinstance(value, str):
+                    value = value.capitalize()
+                scroll_view_gridlayout.add_widget(Label(text=str(process_message(key)), color=(0, 0, 0, 1)))
                 scroll_view_gridlayout.add_widget(Label(text=str(value), color=(0, 0, 0, 1)))
         elif search_text.text.capitalize() in dict_of_symbols:
             element = dict_of_symbols[search_text.text.capitalize()]
             element_information = dictionary_of_elements[element]
             for key, value in element_information.items():
-                if key in ["source", "spectral_img", "xpos", "ypos", "shells", "summary"]:
+                if key in ["source", "spectral_img", "xpos", "ypos", "shells", "summary", "ionization_energies",
+                           "appearance", "electron_configuration"]:
                     continue
-                scroll_view_gridlayout.add_widget(Label(text=str(key), color=(0, 0, 0, 1)))
+                if isinstance(value, str):
+                    value = value.capitalize()
+                if key == "density":
+                    value = f"{value} g/L"
+                scroll_view_gridlayout.add_widget(Label(text=str(process_message(key)), color=(0, 0, 0, 1)))
                 scroll_view_gridlayout.add_widget(Label(text=str(value), color=(0, 0, 0, 1)))
         elif search_text.text == "":
             pass
         else:
             scroll_view_gridlayout.add_widget(Label(text="Invalid Search",
                                                     font_name="Open Sans",
-                                                    font_size=26))
+                                                    font_size=26,
+                                                    color=(0, 0, 0, 1)))
 
     # calculate the molar mass
     def calculate_molar_mass(self):
-        home_page_student = self.root.ids["home_page_student"]
+        home_page_student = self.root.ids["molar_calculator"]
         scroll_calculation_text = home_page_student.ids["calculation_text"]
         chemical_formula_text = home_page_student.ids["chemical_formula_text"]
         molar_mass = elements.MolarMass(chemical_formula_text.text)

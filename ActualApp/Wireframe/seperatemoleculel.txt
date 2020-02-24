@@ -1,0 +1,46 @@
+list_of_elements = []
+        list_of_elements_with_count = []
+        instance_of_capital = True
+        element = ""
+        times_to_continue = 0
+        # for each character in the molecule
+        for i, character in enumerate(self.molecule):
+            if character in self.capital_letters and instance_of_capital:
+                element += character
+                instance_of_capital = False
+                if i == len(self.molecule) - 1:
+                    list_of_elements.append(element)
+            elif character in self.lowercase_letters:
+                element += character
+                if i == len(self.molecule) - 1:
+                    list_of_elements.append(element)
+            elif character in self.capital_letters:
+                list_of_elements.append(element)
+                element = ""
+                element += character
+                if i == len(self.molecule) - 1:
+                    list_of_elements.append(element)
+            elif isinstance(eval(character), int):
+                element += character
+                instance_of_capital = True
+                index = i
+                while True:
+                    try:
+                        if isinstance(eval(self.molecule[index + 1]), int):
+                            element += self.molecule[index + 1]
+                            index += 1
+                        else:
+                            break
+                    except Exception as e:
+                        break
+                list_of_elements.append(element)
+                element = ""
+
+        for entry in list_of_elements:
+            try:
+                if isinstance(eval(entry), int):
+                    continue
+            except Exception as e:
+                list_of_elements_with_count.append(entry)
+
+        return list_of_elements_with_count
