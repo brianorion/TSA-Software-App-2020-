@@ -1,5 +1,7 @@
 import json
 import numpy as np
+from math import gcd
+from functools import reduce
 
 
 def get_elements() -> "returns a dict of elements: {element: description}":
@@ -58,9 +60,15 @@ class MolarMass:
         # the element composition {element: (total mass, abundance in decimal)}
         self.element_composition = self._element_composition()
 
-
     def __str__(self):
-        return self.molecule
+        molecule_string = ""
+        for character in self.molecule:
+            try:
+                if isinstance(eval(character), int):  # if the character is a number
+                    molecule_string += f"[sub]{character}[/sub]"
+            except:
+                molecule_string += character
+        return molecule_string
 
     def _generate_symbol_list(self) -> list:
         symbol_list = [symbol for symbol, name in symbol_element_name_key_pair().items()]
@@ -74,10 +82,15 @@ class MolarMass:
         for symbol in self.symbol_list:
             len_of_symbol = len(symbol)
             indexes = [i for i in range(len(self.molecule)) if self.molecule.startswith(symbol, i)]
-            if len(indexes) > 0:
+            if len(indexes) > 0:  # that the element contains this
+                try:
+                    for character in symbol:
+                        self.symbol_list.remove(character)
+                except:
+                    print("Does not exist")
+
                 for index in indexes:
                     the_index = index + len_of_symbol
-                    # print(index + len_of_symbol)
                     if the_index != len(self.molecule):
                         number = self.molecule[the_index]  # extract a potential number
                         try:
@@ -86,7 +99,6 @@ class MolarMass:
                                     try:
                                         if isinstance(eval(self.molecule[x + the_index]), int):  # if the next thing is an int
                                             number += self.molecule[x + the_index]
-                                            print(number)
                                     except:
                                         break
                                 if symbol not in symbol_dict:
@@ -110,12 +122,14 @@ class MolarMass:
         molar_mass = 0
         for element, frequency in self.element_frequencies.items():
             molar_mass += self.dict_of_element_mass[element] * frequency
+        molar_mass = round(molar_mass * 100) / 100
         return molar_mass
 
     def _element_composition(self):
         calculations = {}
         for element, frequency in self.element_frequencies.items():
             mass = self.dict_of_element_mass[element] * frequency
+            mass = round(mass * 100) / 100
             calculations[element] = (mass, mass / self.molar_mass)
 
         return calculations
@@ -141,9 +155,9 @@ class MolarMass:
         answer += "\nThen multiply the mass by the number of elements that exists within the molecule.\n"
         for element, mass in self.element_composition.items():
             answer += f"{element}: {self.element_frequencies[element]} x " \
-                      f"{self.dict_of_element_mass[element]} g = {mass[0]} g\n"
+                      f"{round(self.dict_of_element_mass[element] * 1000) / 1000} g = {mass[0]} g\n"
         answer += f"\nThen add all of the calculated masses and that would be the total molar mass.\nTotal mass:" \
-                  f" {self.molar_mass}"
+                  f" {self.molar_mass} g"
         return answer
 
 
@@ -214,47 +228,48 @@ class EquationBalance:
         self.reactants = reactants.replace(" ", "").split(",")
         self.products = products.replace(" ", "").split(",")
 
-    def _separate_compounds(self):
-        reactant_objects = []
-        product_objects = []
-        available_elements = []
+    def separate_compounds(self):
+        reactant_dict = {}
+        product_dict = {}
         number_of_columns = 0
-
         for reactant in self.reactants:
-            reactant_objects.append(MolarMass(reactant))
-            available_elements += [key for key, value in MolarMass(reactant).element_frequencies.items()
-                                   if key not in available_elements]
+            reactant_dict[reactant] = MolarMass(reactant).element_frequencies
             number_of_columns += 1
         for product in self.products:
-            product_objects.append(MolarMass(product))
+            product_dict[product] = MolarMass(product).element_frequencies
             number_of_columns += 1
-        array_list = []
+        available_elements_reactant = [element for key, value in reactant_dict.items() for element, frequency in value.items()]
+        available_elements_product = [element for key, value in product_dict.items() for element, frequency in value.items()]
+        available_elements = set(available_elements_product + available_elements_reactant)
+        row = []
+
         for element in available_elements:
-            row_array = []
-            for reactant in reactant_objects:
-                if element in reactant.element_frequencies:
-                    row_array.append(-reactant.element_frequencies[element])
+            element_list = []
+            for key, frequencies in reactant_dict.items():
+                if element in frequencies:
+                    element_list.append(frequencies[element])
                 else:
-                    row_array.append(0)
-            for product in product_objects:
-                if element in product.element_frequencies:
-                    row_array.append(product.element_frequencies[element])
+                    element_list.append(0)
+            for key, frequencies in product_dict.items():
+                if element in frequencies:
+                    element_list.append(-frequencies[element])
                 else:
-                    row_array.append(0)
-            array_list.append(row_array)
+                    element_list.append(0)
+            row.append(element_list)
         end_array = []
         for x in range(number_of_columns):
             end_array.append(0)
         end_array[0] = 1
-        array_list.append(end_array)
-        if len(array_list) % 2 != 0:
-            for elements in array_list:
+        row.append(end_array)
+        if len(row) % 2 != 0:
+            for elements in row:
                 elements.append(0.0000000000001)
-        return array_list, end_array
+        return row, end_array
+
 
     def balance_equation(self):
         fractions = [0, 1/3, 0.25, 2/3, 0.5, 0.75, 1]
-        array_lists = self._separate_compounds()
+        array_lists = self.separate_compounds()
         stoich_mat = np.array(array_lists[0])
         end_array = array_lists[1]
         end_array[0] = 0
@@ -288,7 +303,9 @@ class EquationBalance:
                 multiplier *= 2
             elif closest == 1:
                 multiplier *= 1
-        processed_coefficients = [x * multiplier for x in processed_coefficients]
+        processed_coefficients = [int(x * multiplier) for x in processed_coefficients]
+        greatest_common_factor = reduce(lambda x, y : gcd(x, y), processed_coefficients)
+        processed_coefficients = [int(x / greatest_common_factor) for x in processed_coefficients]
         balanced_equation = ""
         index = 0
         numbers = [str(x) for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]]
@@ -331,16 +348,8 @@ if __name__ == "__main__":
     # print(percent_comp.empirical_formula[1])
     # print(percent_comp.molecular_formula)
     # print(percent_comp.abundance)
-    # temp = EquationBalance("C6H12O6, O2", "CO2, H2O")
+    temp = EquationBalance("Fe2O3, C", "Fe, CO2")
+    temp.separate_compounds()
+    print(temp.balance_equation())
     # print(entry_molar_mass.show_calculation())
     # print(symbol_element_name_key_pair())
-
-    x = [symbol for symbol, name in symbol_element_name_key_pair().items()]
-
-    x.sort(key=len)
-    x.reverse()
-
-    molar = MolarMass("C20H12H23")
-    print(molar.element_frequencies)
-    print(molar.molar_mass)
-

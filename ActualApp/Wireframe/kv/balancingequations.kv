@@ -6,3 +6,69 @@
         Rectangle:
             pos: self.pos
             size: self.size
+    FloatLayout:
+        GridLayout:
+            row: 1
+            col: 1
+            size_hint: 1, 1
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            canvas:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "Image/BorderForALl.png"
+
+        # Back Button
+        Button:
+            size_hint: 0.1277778, 0.0643902439
+            pos_hint: {"top": 0.96, "right": 0.91}
+            text: "Back"
+            font_name: "Open Sans Light"
+            bold: True
+            color: 0, 0, 0, 1
+            background_normal: "Image/Arrow.png"
+            background_down: "Image/Arrow_50%_Opacity.png"
+            on_release: app.back_button("home_page_student", True)
+        Label:
+            pos_hint: {"top": 0.935, "center_x": 0.5}
+            size_hint: 1, 0.05
+            text: "Balance Equation\nCalculator"
+            font_size: "20dp"
+            font_name: "Open Sans"
+            color: 0, 0, 0, 1
+        Button:
+            size_hint: 0.3, 0.07
+            pos_hint: {"top": 0.73, "center_x": 0.5}
+            text: "Balance"
+            font_name: "Open Sans Light"
+            on_release: app.balance_equation()
+        TextInput:
+            id: reactant_list
+            size_hint: 0.7, 0.05
+            pos_hint: {"top": 0.85, "center_x": 0.5}
+            multiline: False
+            hint_text: "REACTANTS i.e. C6H12O6, O2"
+            font_name: "Open Sans"
+        TextInput:
+            id: product_list
+            size_hint: 0.7, 0.05
+            pos_hint: {"top": 0.79, "center_x": 0.5}
+            multiline: False
+            hint_text: "PRODUCT i.e. CO2, H2O"
+            font_name: "Open Sans"
+        ScrollView:
+            pos_hint: {"top": 0.66, "center_x": 0.5}
+            size_hint: 0.75, 0.68
+            do_scroll_x: False
+            do_scroll_y: True
+            scroll_y: 0
+            Label:
+                size_hint_y: None
+                id: balance_equation_scroll_view
+                markup: True
+                font_size: "14dp"
+                height: self.texture_size[1] * 1.15
+                text_size: root.width * 0.75, None
+                color: 0, 0, 0, 1
+                font_name: "Open Sans Light"
+                text: ""

@@ -18,6 +18,19 @@
                     pos: self.pos
                     size: self.size
                     source: "Image/BorderForALl.png"
+
+        # Back Button
+        Button:
+            size_hint: 0.1277778, 0.0643902439
+            pos_hint: {"top": 0.96, "right": 0.91}
+            text: "Back"
+            font_name: "Open Sans Light"
+            bold: True
+            color: 0, 0, 0, 1
+            background_normal: "Image/Arrow.png"
+            background_down: "Image/Arrow_50%_Opacity.png"
+            on_release: app.back_button("home_page_student", True)
+
         Label:
             pos_hint: {"top": 0.95, "center_x": 0.5}
             size_hint: 1, 0.05
@@ -49,7 +62,7 @@
                 markup: True
                 size_hint_y: None
                 id: calculation_text
-                font_size: 14
+                font_size: "14dp"
                 height: self.texture_size[1] * 1.15
                 text_size: root.width * 0.75, None
                 color: 0, 0, 0, 1

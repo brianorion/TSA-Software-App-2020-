@@ -1,0 +1,36 @@
+reactant_objects = []
+        product_objects = []
+        available_elements = []
+        number_of_columns = 0
+
+        for reactant in self.reactants:
+            reactant_objects.append(MolarMass(reactant))
+            available_elements += [key for key, value in MolarMass(reactant).element_frequencies.items()
+                                   if key not in available_elements]
+            number_of_columns += 1
+        for product in self.products:
+            product_objects.append(MolarMass(product))
+            number_of_columns += 1
+        array_list = []
+        for element in available_elements:
+            row_array = []
+            for reactant in reactant_objects:
+                if element in reactant.element_frequencies:
+                    row_array.append(-reactant.element_frequencies[element])
+                else:
+                    row_array.append(0)
+            for product in product_objects:
+                if element in product.element_frequencies:
+                    row_array.append(product.element_frequencies[element])
+                else:
+                    row_array.append(0)
+            array_list.append(row_array)
+        end_array = []
+        for x in range(number_of_columns):
+            end_array.append(0)
+        end_array[0] = 1
+        array_list.append(end_array)
+        if len(array_list) % 2 != 0:
+            for elements in array_list:
+                elements.append(0.0000000000001)
+        return array_list, end_array

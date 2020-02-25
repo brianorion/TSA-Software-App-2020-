@@ -70,6 +70,7 @@
             source: "Image/1-2 Create Account/Content #19/Divider #75.png"
             size_hint: 0.8, 0.05
             pos_hint: {"top": 0.73, "center_x": 0.5}
+            allow_stretch: True
 
         TextInput:
             multiline: False
@@ -84,6 +85,7 @@
             source: "Image/1-2 Create Account/Content #19/Divider #75.png"
             size_hint: 0.8, 0.05
             pos_hint: {"top": 0.65, "center_x": 0.5}
+            allow_stretch: True
 
         TextInput:
             multiline: False
@@ -97,6 +99,7 @@
             source: "Image/1-2 Create Account/Content #19/Divider #75.png"
             size_hint: 0.8, 0.05
             pos_hint: {"top": 0.57, "center_x": 0.5}
+            allow_stretch: True
 
         TextInput:
             multiline: False
@@ -110,6 +113,7 @@
             source: "Image/1-2 Create Account/Content #19/Divider #75.png"
             size_hint: 0.8, 0.05
             pos_hint: {"top": 0.49, "center_x": 0.5}
+            allow_stretch: True
 
         TextInput:
             multiline: False
@@ -123,6 +127,7 @@
             source: "Image/1-2 Create Account/Content #19/Divider #75.png"
             size_hint: 0.8, 0.05
             pos_hint: {"top": 0.41, "center_x": 0.5}
+            allow_stretch: True
 
 
         Label:
@@ -130,6 +135,7 @@
             pos_hint: {"top": 0.35, "center_x": 0.5}
             size_hint: 0.5, 0.05
             text: ""
+            font_size: "16dp"
             color: 1, 0, 0, 1
         Button:
             pos_hint: {"top": 0.25, "center_x": 0.5}
@@ -137,9 +143,14 @@
             text: "Signup!"
             on_release: app.change_screen("login_screen")
         Button:
-            pos_hint: {"top": 0.1, "left": 1}
-            size_hint: 0.3, 0.05
+            pos_hint: {"top": 0.96, "right": 0.91}
+            size_hint: 0.1277778, 0.0643902439
             text: "Back"
+            font_name: "Open Sans Light"
+            bold: True
+            color: 0, 0, 0, 1
+            background_normal: "Image/Arrow.png"
+            background_down: "Image/Arrow_50%_Opacity.png"
             on_release: app.back_button("login_screen", True)
 
 

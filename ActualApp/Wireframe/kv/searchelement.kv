@@ -18,6 +18,17 @@
                     size: self.size
                     source: "Image/BorderForALl.png"
 
+        # Back Button
+        Button:
+            size_hint: 0.1277778, 0.0643902439
+            pos_hint: {"top": 0.96, "right": 0.91}
+            text: "Back"
+            font_name: "Open Sans Light"
+            bold: True
+            color: 0, 0, 0, 1
+            background_normal: "Image/Arrow.png"
+            background_down: "Image/Arrow_50%_Opacity.png"
+            on_release: app.back_button("home_page_student", True)
 
         Button:
             size_hint: 0.4, 0.05
@@ -47,7 +58,7 @@
             do_scroll_y: True
             GridLayout:
                 id: searching_table
-                row_default_height: 50
+                row_default_height: "50dp"
                 row_force_default: True
                 cols: 2
                 padding: 0, 0

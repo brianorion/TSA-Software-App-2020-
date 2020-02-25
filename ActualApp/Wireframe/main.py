@@ -299,7 +299,7 @@ class MainApp(App):
         else:
             scroll_view_gridlayout.add_widget(Label(text="Invalid Search",
                                                     font_name="Open Sans",
-                                                    font_size=26,
+                                                    font_size="26dp",
                                                     color=(0, 0, 0, 1)))
 
     # calculate the molar mass
@@ -308,14 +308,16 @@ class MainApp(App):
         scroll_calculation_text = home_page_student.ids["calculation_text"]
         chemical_formula_text = home_page_student.ids["chemical_formula_text"]
         molar_mass = elements.MolarMass(chemical_formula_text.text)
-        answer = f"[b]Compound[/b]: {molar_mass}\n[b]Element Frequency[/b]: "
+
+        answer = f"[b]Compound[/b]: {molar_mass}\n[b]Element Frequency[/b]: \n"
+        print(molar_mass)
         for element, frequency in molar_mass.element_frequencies.items():
-            answer += str(element) + ": " + str(frequency) + " "
+            answer += f"{element}: {frequency} \n"
         answer += "\n[b]Relative Masses and Percent[/b]:\n"
         for element, information in molar_mass.element_composition.items():
-            answer += f"     [b]Total mass of {element} in {molar_mass}[/b]: {information[0]} g\n"
-            answer += f"[b]     Percent composition of {element} in {molar_mass}[/b]: " \
-                      f"{round(information[1] * 100, 1)}%\n"
+            answer += f"[u]Total mass of {element}[/u]: {information[0]} g\n"
+            answer += f"[u]Percent composition of {element}[/u]: " \
+                      f"{round(information[1] * 100, 1)}%\n\n"
         answer += f"[b]Total mass[/b]: {molar_mass.molar_mass} g"
         scroll_calculation_text.text = answer + "\n\n\n"
         scroll_calculation_text.text += "[b]Calculations[/b]\n" + molar_mass.show_calculation()
@@ -356,7 +358,7 @@ class MainApp(App):
 
     # balance a equation
     def balance_equation(self):
-        homepage = self.root.ids["home_page_student"]
+        homepage = self.root.ids["balancing_equations"]
         reactant_list = homepage.ids["reactant_list"].text
         product_list = homepage.ids["product_list"].text
         scroll_view_text = homepage.ids["balance_equation_scroll_view"]
