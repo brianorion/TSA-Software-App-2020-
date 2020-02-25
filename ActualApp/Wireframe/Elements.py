@@ -50,6 +50,7 @@ class MolarMass:
         self.capital_letters = [chr(x) for x in range(65, 91)]
         self.lowercase_letters = [chr(x) for x in range(97, 123)]
         self.molecule = molecule
+        self.unprocessed_molecule = molecule
         self.symbol_list = self._generate_symbol_list()
         # the frequency of each element
         self.element_frequencies = self._separate_molecule()
@@ -62,7 +63,7 @@ class MolarMass:
 
     def __str__(self):
         molecule_string = ""
-        for character in self.molecule:
+        for character in self.unprocessed_molecule:
             try:
                 if isinstance(eval(character), int):  # if the character is a number
                     molecule_string += f"[sub]{character}[/sub]"
@@ -83,12 +84,6 @@ class MolarMass:
             len_of_symbol = len(symbol)
             indexes = [i for i in range(len(self.molecule)) if self.molecule.startswith(symbol, i)]
             if len(indexes) > 0:  # that the element contains this
-                try:
-                    for character in symbol:
-                        self.symbol_list.remove(character)
-                except:
-                    print("Does not exist")
-
                 for index in indexes:
                     the_index = index + len_of_symbol
                     if the_index != len(self.molecule):
@@ -115,6 +110,10 @@ class MolarMass:
                             symbol_dict[symbol] = 1
                         else:
                             symbol_dict[symbol] += 1
+                if symbol_dict[symbol] > 1:
+                    self.molecule = self.molecule.replace(f"{symbol}{symbol_dict[symbol]}", "")
+                else:
+                    self.molecule = self.molecule.replace(f"{symbol}", "")
             index_value += 1
         return symbol_dict
 
@@ -169,6 +168,8 @@ class PercentComp:
         self.fractions = [0, 1/3, 0.25, 2/3, 0.5, 0.75, 1]
         self.empirical_formula = self._empirical_formula()
         self.molecular_formula = self._molecular_formula()
+        self.empirical_formula_markup = MolarMass(self.empirical_formula[0])
+
 
     @ staticmethod
     def closest(fractions, mole_value):
@@ -342,14 +343,19 @@ if __name__ == "__main__":
     # entry_molar_mass = MolarMass("MgSO4")
     # # print(entry_molar_mass.show_element_composition())
     # # print(entry_molar_mass.molar_mass)
-    # percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 290)
+    percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 600)
+    print(percent_comp.empirical_formula)
+    print(percent_comp.molecular_formula)
+
     # # # print(percent_comp.elements_percent_pair)
     # # # print(get_elements()["Hydrogen"]["atomic_mass"])
     # print(percent_comp.empirical_formula[1])
     # print(percent_comp.molecular_formula)
-    # print(percent_comp.abundance)
-    temp = EquationBalance("Fe2O3, C", "Fe, CO2")
-    temp.separate_compounds()
-    print(temp.balance_equation())
+    # # print(percent_comp.abundance)
+    # temp = EquationBalance("Fe2O3, C", "Fe, CO2")
+    # temp.separate_compounds()
+    # print(temp.balance_equation())
     # print(entry_molar_mass.show_calculation())
     # print(symbol_element_name_key_pair())
+
+

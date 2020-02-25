@@ -325,7 +325,7 @@ class MainApp(App):
     # calculate empirical or molecular formula base off of percent composition and abundance
     def calculate_formula(self):
         # TODO take in formula names and symbol
-        home_page_screen = self.root.ids["home_page_student"]
+        home_page_screen = self.root.ids["calculate_formula"]
         element_list_text = home_page_screen.ids["element_list_text"]
         percent_list_text = home_page_screen.ids["percent_list_text"]
         calculate_formula_scroll_view = home_page_screen.ids["calculate_formula_scroll_view"]
@@ -334,12 +334,14 @@ class MainApp(App):
         element_list = element_list_text.text.replace(" ", "").split(",")
         init_percent_list = percent_list_text.text.replace(" ", "").split(",")
         term_percent_list = []
-        if len(init_percent_list) > 0:
+        if element_list_text.text == "" or percent_list_text.text == "":
+            calculate_formula_scroll_view.text = "Missing Inputs"
+        elif len(init_percent_list) > 0:
             for percent in init_percent_list:
                 if percent[-1] == "%":
                     percent = float(percent.strip("%")) / 100
                     term_percent_list.append(percent)
-                elif isinstance(eval(percent), float):
+                elif isinstance(eval(percent), float) or isinstance(eval(percent), int):
                     term_percent_list.append(eval(percent))
                 else:
                     calculate_formula_scroll_view.text = "Invalid Percentage Values."
@@ -348,7 +350,7 @@ class MainApp(App):
                 calculate_formula_scroll_view.text = "Given percentages does not add up to 100%."
             else:
                 percent_comp_obj = elements.PercentComp(element_list, term_percent_list)
-                empirical_formula = percent_comp_obj.empirical_formula[0]
+                empirical_formula = percent_comp_obj.empirical_formula_markup
                 moles = percent_comp_obj.empirical_formula[1]
                 for element, mole in moles.items():
                     calculate_formula_scroll_view.text += f"The molecule contains {round(mole)} moles of {element}\n"
@@ -381,9 +383,6 @@ class MainApp(App):
             status.text = Database.get_occupation(Database.db, local_id=self.local_id, key="Occupation", folder="Users")
         elif occupation == "teacher":
             pass
-
-    def home_page_classroom(self):
-        pass
 
     def sign_out(self):
         self.change_screen("login_screen")
