@@ -331,9 +331,17 @@ class MainApp(App):
         home_page_screen = self.root.ids["calculate_formula"]
         element_list_text = home_page_screen.ids["element_list_text"]
         percent_list_text = home_page_screen.ids["percent_list_text"]
+        mass = home_page_screen.ids["mass"]
         calculate_formula_scroll_view = home_page_screen.ids["calculate_formula_scroll_view"]
         calculate_formula_scroll_view.text = ""
         percentage_contains_string = False
+        there_is_mass = False
+
+        try:
+            if isinstance(eval(mass), int) or isinstance(eval(mass), float):  # if the mass is actually a number
+                there_is_mass = True
+        except:
+            there_is_mass = False
 
         element_list = element_list_text.text.replace(" ", "").split(",")
         init_percent_list = percent_list_text.text.replace(" ", "").split(",")
@@ -359,12 +367,22 @@ class MainApp(App):
             elif sum(term_percent_list) != 1:
                 calculate_formula_scroll_view.text = "Given percentages does not add up to 100%."
             else:
-                percent_comp_obj = elements.PercentComp(element_list, term_percent_list)
-                empirical_formula = percent_comp_obj.empirical_formula_markup
-                moles = percent_comp_obj.empirical_formula[1]
-                for element, mole in moles.items():
-                    calculate_formula_scroll_view.text += f"The molecule contains {round(mole)} moles of {element}\n"
-                calculate_formula_scroll_view.text += f"The empirical formula would be: {empirical_formula}"
+                if there_is_mass:
+                    percent_comp_obj = elements.PercentComp(element_list, term_percent_list, eval(mass))
+                    empirical_formula = percent_comp_obj.empirical_formula_markup
+                    molecular_formula = elements.MolarMass(percent_comp_obj.molecular_formula)
+                    moles = percent_comp_obj.empirical_formula[1]
+                    for element, mole in moles.items():
+                        calculate_formula_scroll_view.text += f"The molecule contains {round(mole)} moles of {element}\n"
+                    calculate_formula_scroll_view.text += f"The empirical formula would be: {empirical_formula}"
+                    calculate_formula_scroll_view.text += f"The molecular formula would be: {molecular_formula}"
+                else:
+                    percent_comp_obj = elements.PercentComp(element_list, term_percent_list)
+                    empirical_formula = percent_comp_obj.empirical_formula_markup
+                    moles = percent_comp_obj.empirical_formula[1]
+                    for element, mole in moles.items():
+                        calculate_formula_scroll_view.text += f"The molecule contains {round(mole)} moles of {element}\n"
+                    calculate_formula_scroll_view.text += f"The empirical formula would be: {empirical_formula}"
         else:
             calculate_formula_scroll_view.text = "No percentages are given."
 
@@ -418,7 +436,7 @@ class MainApp(App):
             pass
 
     def sign_out(self):
-        
+
         self.change_screen("login_screen")
 
 if __name__ == "__main__":

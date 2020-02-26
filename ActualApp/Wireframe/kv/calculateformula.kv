@@ -39,32 +39,39 @@
             color: 0, 0, 0, 1
 
         Button:
-            size_hint: 0.3, 0.07
-            pos_hint: {"top": 0.73, "center_x": 0.5}
+            size_hint: 0.3, 0.05
+            pos_hint: {"top": 0.72, "center_x": 0.5}
             text: "Calculate"
             font_name: "Open Sans Light"
             on_release: app.calculate_formula()
         TextInput:
+            id: mass
+            size_hint: 0.7, 0.05
+            pos_hint: {"top": 0.87, "center_x": 0.5}
+            multiline: False
+            hint_text: "Mass if applicable i.e. 200"
+            font_name: "Open Sans"
+        TextInput:
             id: element_list_text
             size_hint: 0.7, 0.05
-            pos_hint: {"top": 0.85, "center_x": 0.5}
+            pos_hint: {"top": 0.82, "center_x": 0.5}
             multiline: False
             hint_text: "Elements i.e. C, H, O"
             font_name: "Open Sans"
         TextInput:
             id: percent_list_text
             size_hint: 0.7, 0.05
-            pos_hint: {"top": 0.79, "center_x": 0.5}
+            pos_hint: {"top": 0.77, "center_x": 0.5}
             multiline: False
             hint_text: "Percentages i.e. 0.3 or 30%"
             font_name: "Open Sans"
         Image:
             source: "Image/Rounded Rectangle 1.png"
-            pos_hint: {"top": 0.66, "center_x": 0.5}
+            pos_hint: {"top": 0.65, "center_x": 0.5}
             size_hint: 0.75, 0.6
             allow_stretch: True
         ScrollView:
-            pos_hint: {"top": 0.66, "center_x": 0.5}
+            pos_hint: {"top": 0.65, "center_x": 0.5}
             size_hint: 0.75, 0.68
             do_scroll_x: False
             do_scroll_y: True

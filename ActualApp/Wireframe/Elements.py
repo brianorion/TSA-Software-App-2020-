@@ -220,8 +220,10 @@ class PercentComp:
         molecular_formula = None
         # TODO make sure that the rounding is exactly what i wanted it to be. ASK Angel.
         if self.abundance is not None:
+            molecular_formula = ""
             multiplier = round(self.abundance / molar_mass.molar_mass)
-            molecular_formula = {key: value * multiplier for key, value in self.empirical_formula[1].items()}
+            for key, value in self.empirical_formula[1].items():
+                molecular_formula += f"{key}{int(value * multiplier)}"
         return molecular_formula
 
 
@@ -356,19 +358,19 @@ if __name__ == "__main__":
     # entry_molar_mass = MolarMass("MgSO4")
     # # print(entry_molar_mass.show_element_composition())
     # # print(entry_molar_mass.molar_mass)
-    # percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 600)
-    # print(percent_comp.empirical_formula)
-    # print(percent_comp.molecular_formula)
+    percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 600)
+    print(percent_comp.empirical_formula)
+    print(percent_comp.molecular_formula)
 
     # # # print(percent_comp.elements_percent_pair)
     # # # print(get_elements()["Hydrogen"]["atomic_mass"])
     # print(percent_comp.empirical_formula[1])
     # print(percent_comp.molecular_formula)
     # # print(percent_comp.abundance)
-    temp = EquationBalance("H, S", "H2S")
-    molar = MolarMass("dasdas")
-    print(molar)
-    print(temp.balance_equation())
+    # temp = EquationBalance("H, S", "H2S")
+    # molar = MolarMass("dasdas")
+    # print(molar)
+    # print(temp.balance_equation())
     # print(entry_molar_mass.show_calculation())
     # print(symbol_element_name_key_pair())
 
