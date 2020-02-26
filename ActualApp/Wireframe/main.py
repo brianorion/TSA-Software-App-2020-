@@ -277,7 +277,7 @@ class MainApp(App):
                     continue
                 if key == "density":
                     value = f"{value} g/L"
-                if isinstance(value, str):
+                if isinstance(value, str) and key != "discovered_by" and key != "named_by":
                     value = value.capitalize()
                 scroll_view_gridlayout.add_widget(Label(text=str(process_message(key)), color=(0, 0, 0, 1)))
                 scroll_view_gridlayout.add_widget(Label(text=str(value), color=(0, 0, 0, 1)))
@@ -288,7 +288,7 @@ class MainApp(App):
                 if key in ["source", "spectral_img", "xpos", "ypos", "shells", "summary", "ionization_energies",
                            "appearance", "electron_configuration"]:
                     continue
-                if isinstance(value, str):
+                if isinstance(value, str) and key != "discovered_by" and key != "named_by":
                     value = value.capitalize()
                 if key == "density":
                     value = f"{value} g/L"
@@ -308,19 +308,22 @@ class MainApp(App):
         scroll_calculation_text = home_page_student.ids["calculation_text"]
         chemical_formula_text = home_page_student.ids["chemical_formula_text"]
         molar_mass = elements.MolarMass(chemical_formula_text.text)
-
-        answer = f"[b]Compound[/b]: {molar_mass}\n[b]Element Frequency[/b]: \n"
-        print(molar_mass)
-        for element, frequency in molar_mass.element_frequencies.items():
-            answer += f"{element}: {frequency} \n"
-        answer += "\n[b]Relative Masses and Percent[/b]:\n"
-        for element, information in molar_mass.element_composition.items():
-            answer += f"[u]Total mass of {element}[/u]: {information[0]} g\n"
-            answer += f"[u]Percent composition of {element}[/u]: " \
-                      f"{round(information[1] * 100, 1)}%\n\n"
-        answer += f"[b]Total mass[/b]: {molar_mass.molar_mass} g"
-        scroll_calculation_text.text = answer + "\n\n\n"
-        scroll_calculation_text.text += "[b]Calculations[/b]\n" + molar_mass.show_calculation()
+        if molar_mass.molar_mass <= 0:
+            answer = f"Compound [b]{chemical_formula_text.text}[/b] is invalid"
+            scroll_calculation_text.text = answer
+        else:
+            answer = f"[b]Compound[/b]: {molar_mass}\n[b]Element Frequency[/b]: \n"
+            print(molar_mass)
+            for element, frequency in molar_mass.element_frequencies.items():
+                answer += f"{element}: {frequency} \n"
+            answer += "\n[b]Relative Masses and Percent[/b]:\n"
+            for element, information in molar_mass.element_composition.items():
+                answer += f"[u]Total mass of {element}[/u]: {information[0]} g\n"
+                answer += f"[u]Percent composition of {element}[/u]: " \
+                          f"{round(information[1] * 100, 1)}%\n\n"
+            answer += f"[b]Total mass[/b]: {molar_mass.molar_mass} g"
+            scroll_calculation_text.text = answer + "\n\n\n"
+            scroll_calculation_text.text += "[b]Calculations[/b]\n" + molar_mass.show_calculation()
 
     # calculate empirical or molecular formula base off of percent composition and abundance
     def calculate_formula(self):
@@ -330,6 +333,7 @@ class MainApp(App):
         percent_list_text = home_page_screen.ids["percent_list_text"]
         calculate_formula_scroll_view = home_page_screen.ids["calculate_formula_scroll_view"]
         calculate_formula_scroll_view.text = ""
+        percentage_contains_string = False
 
         element_list = element_list_text.text.replace(" ", "").split(",")
         init_percent_list = percent_list_text.text.replace(" ", "").split(",")
@@ -338,15 +342,21 @@ class MainApp(App):
             calculate_formula_scroll_view.text = "Missing Inputs"
         elif len(init_percent_list) > 0:
             for percent in init_percent_list:
-                if percent[-1] == "%":
-                    percent = float(percent.strip("%")) / 100
-                    term_percent_list.append(percent)
-                elif isinstance(eval(percent), float) or isinstance(eval(percent), int):
-                    term_percent_list.append(eval(percent))
-                else:
-                    calculate_formula_scroll_view.text = "Invalid Percentage Values."
+                try:
+                    if percent[-1] == "%":
+                        percent = float(percent.strip("%")) / 100
+                        term_percent_list.append(percent)
+                    elif isinstance(eval(percent), float) or isinstance(eval(percent), int):
+                        term_percent_list.append(eval(percent))
+                    else:
+                        calculate_formula_scroll_view.text = "Invalid Percentage Values."
+                        break
+                except:
+                    percentage_contains_string = True
                     break
-            if sum(term_percent_list) != 1:
+            if percentage_contains_string:
+                calculate_formula_scroll_view.text = "Percentage Values contains characters."
+            elif sum(term_percent_list) != 1:
                 calculate_formula_scroll_view.text = "Given percentages does not add up to 100%."
             else:
                 percent_comp_obj = elements.PercentComp(element_list, term_percent_list)
@@ -364,8 +374,31 @@ class MainApp(App):
         reactant_list = homepage.ids["reactant_list"].text
         product_list = homepage.ids["product_list"].text
         scroll_view_text = homepage.ids["balance_equation_scroll_view"]
-        equation_balance = elements.EquationBalance(reactant_list, product_list)
-        scroll_view_text.text = f"The balanced equation is:\n {equation_balance.balance_equation()}"
+        # Check if the entries are valid
+        reactants = reactant_list.replace(" ", "").split(",")
+        products = product_list.replace(" ", "").split(",")
+        invalid = False
+        for reactant in reactants:
+            molar_mass = elements.MolarMass(reactant)
+            if molar_mass.molar_mass <= 0:
+                invalid = True
+                break
+        for product in products:
+            if invalid:
+                break
+            else:
+                molar_mass2 = elements.MolarMass(product)
+                if molar_mass2.molar_mass <= 0:
+                    invalid = True
+                    break
+        print(reactants, products)
+        if reactants[0] == "" or products[0] == "":
+            scroll_view_text.text = f"Missing Inputs"
+        elif invalid:
+            scroll_view_text.text = f"Invalid Input"
+        else:
+            balanced_equation = elements.EquationBalance(reactant_list, product_list)
+            scroll_view_text.text = f"The balanced equation is {balanced_equation.balance_equation()}"
 
     # method to update user setting
     def initial_settings(self, occupation: str):
@@ -385,6 +418,7 @@ class MainApp(App):
             pass
 
     def sign_out(self):
+        
         self.change_screen("login_screen")
 
 if __name__ == "__main__":

@@ -68,7 +68,8 @@ class MolarMass:
                 if isinstance(eval(character), int):  # if the character is a number
                     molecule_string += f"[sub]{character}[/sub]"
             except:
-                molecule_string += character
+                if character in symbol_element_name_key_pair():
+                    molecule_string += character
         return molecule_string
 
     def _generate_symbol_list(self) -> list:
@@ -257,14 +258,26 @@ class EquationBalance:
                 else:
                     element_list.append(0)
             row.append(element_list)
+        print(row)
+        print(len(row))
         end_array = []
         for x in range(number_of_columns):
             end_array.append(0)
         end_array[0] = 1
-        row.append(end_array)
-        if len(row) % 2 != 0:
-            for elements in row:
-                elements.append(0.0000000000001)
+        print(row)
+        if len(row) < len(row[0]): # if the row is smaller than the column
+            row_col_diff = abs(len(row[0]) - len(row))
+            for x in range(row_col_diff):  # the number of rows to add
+                added_row = []
+                for y in range(len(row[0])):  # the number of columns within a row
+                    added_row.append(0.0000000000000001)
+                row.append(added_row)
+        elif len(row) > len(row[0]):  # if the row is bigger than the column
+            col_row_diff = abs(len(row[0]) - len(row))
+            for x in range(col_row_diff):
+                for entry in row:
+                    entry.append(0.0000000000000001)
+
         return row, end_array
 
 
@@ -343,18 +356,19 @@ if __name__ == "__main__":
     # entry_molar_mass = MolarMass("MgSO4")
     # # print(entry_molar_mass.show_element_composition())
     # # print(entry_molar_mass.molar_mass)
-    percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 600)
-    print(percent_comp.empirical_formula)
-    print(percent_comp.molecular_formula)
+    # percent_comp = PercentComp(["C", "H", "N", "O"], [0.5714, 0.0616, 0.0952, 0.2718], 600)
+    # print(percent_comp.empirical_formula)
+    # print(percent_comp.molecular_formula)
 
     # # # print(percent_comp.elements_percent_pair)
     # # # print(get_elements()["Hydrogen"]["atomic_mass"])
     # print(percent_comp.empirical_formula[1])
     # print(percent_comp.molecular_formula)
     # # print(percent_comp.abundance)
-    # temp = EquationBalance("Fe2O3, C", "Fe, CO2")
-    # temp.separate_compounds()
-    # print(temp.balance_equation())
+    temp = EquationBalance("H, S", "H2S")
+    molar = MolarMass("dasdas")
+    print(molar)
+    print(temp.balance_equation())
     # print(entry_molar_mass.show_calculation())
     # print(symbol_element_name_key_pair())
 
