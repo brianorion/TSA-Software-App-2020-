@@ -199,9 +199,6 @@ class MainApp(App):
         password = login_screen.ids["password_text"]
         error_text = login_screen.ids["error_text"]
 
-        email.text = "brianplease1@gmail.com"
-        password.text = "okpleaseop31"
-
         auth = Authentication()
         ids = auth.sign_in(email.text, password.text)
         self.local_id = ids[0]
